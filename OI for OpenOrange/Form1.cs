@@ -123,8 +123,15 @@ namespace OI_for_OpenOrange
 
         private void terminate()
         {
-            this.Dispose();
-            this.Close();
+            try
+            {
+                this.Dispose();
+                this.Close();
+            }
+            catch
+            {
+                this.Close();
+            }
         }
     }
 
