@@ -67,7 +67,7 @@ namespace OI_for_OpenOrange
 
             Boolean err = false;
             int timeOut = 0;
-            int lines;
+            int lines = 0;
             try
             {
                 lines = File.ReadLines(".\\install.log").Count();
@@ -81,17 +81,21 @@ namespace OI_for_OpenOrange
             {
                 this.terminate();
             }
-            while (err == false && timeOut < 50)
+            while (err == false && timeOut < 90)
             {
-                progressBar1.PerformStep();
-                this.Update();
                 try
                 {
                     //var file = new FileStream("install.log", FileMode.Open, FileAccess.Read);
-                    while (lines == File.ReadLines(".\\install.log").Count() && progressBar1.Value < 100)
+                    if (lines == File.ReadLines(".\\install.log").Count())
                     {
-                        System.Threading.Thread.Sleep(1000);
+                        progressBar1.PerformStep();
+                        progressBar1.Refresh();
                         timeOut += 1;
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
                 catch
@@ -99,39 +103,14 @@ namespace OI_for_OpenOrange
                     err = true;
                 }
             }
-            this.Update();
+            this.Refresh();
             if (progressBar1.Value < 100)
             {
                 while (progressBar1.Value < 100)
                 {
                     progressBar1.PerformStep();
-                    this.Update();
+                    progressBar1.Refresh();
                 }
-
-                //while (progressBar1.Value < 100)
-                //{
-                    //if (progressBar1.Value < 20)
-                    //{
-                    //    progressBar1.Value += 75;
-                    //}
-                    //else if (progressBar1.Value >= 20 && progressBar1.Value < 40)
-                    //{
-                    //    progressBar1.Value += 50;
-                    //}
-                    //else if (progressBar1.Value >= 40 && progressBar1.Value < 60)
-                    //{
-                    //    progressBar1.Value += 40;
-                    //}
-                    //else if (progressBar1.Value >= 60 && progressBar1.Value < 90)
-                    //{
-                    //    progressBar1.Value += 10;
-                    //}
-                    //else if (progressBar1.Value > 90)
-                    //{
-                    //    progressBar1.Value = 100;
-                    //    break;
-                    //}
-                //}
             }
 
             this.terminate();
@@ -144,8 +123,8 @@ namespace OI_for_OpenOrange
 
         private void terminate()
         {
-            this.Close();
             this.Dispose();
+            this.Close();
         }
     }
 
